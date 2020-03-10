@@ -3,7 +3,8 @@
 
 
  Display::Display(int rs, int enable, int d4, int d5, int d6, int d7){
-    static LiquidCrystal LCD(rs, enable, d4, d5, d6, d7);
+    static LiquidCrystal LCD(rs, enable, d4, d5, d6, d7); //La mantengo static porque en la clase se guarda el puntero, y si se llama al
+                                                        //destructor de LCD, el puntero queda apuntando a NULL.
     LCD.begin(16,2);
     LCD.print("Inicializando");
     displayMode = ACTUAL;
