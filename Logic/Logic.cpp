@@ -46,7 +46,7 @@ void Logic::setDangerFlag(){
     danger = true;
     return;
 }
-*/
+
 data_t Logic::getData2Save(){
     data_t answer;
     answer.ciclos = ciclos;
@@ -59,19 +59,18 @@ data_t Logic::getData2Save(){
     answer.tempProm = (char)num;
     return answer;
 }
-
+*/
 void Logic::resetAllData(){
     temperaturas.clear();
     ciclos = 0;
-    danger = false;
-    waitUntilIsColdAgain = false;
+    currentState = START;
     return;
 }
 
 
 Logic::Logic(IO * temp, Dsiplay * disp){
     ciclos = 0;
-    currentState = COOLING;
+    currentState = START;
     io = temp;
     display = disp;
 }
@@ -80,7 +79,7 @@ void Logic::updateSystem(){
     event_t ev = getNextEvent();
     switch(ev){
         case C_OPENS:
-            if(currentState == COOLING){
+            if(currentState == COOLING || currentState == START){
                 currentState = WARMING;
                 io->toWarm(true);
             }
@@ -91,7 +90,6 @@ void Logic::updateSystem(){
                 io->toWarm(false);
                 ciclos++;
                 temperaturas.push_back(io->getTemperature());
-                display->updateData(ciclos,io->getTemperature(),temperaturas.getMean());
             }
             break;
         case TEMP_MAX:
@@ -113,5 +111,27 @@ void Logic::updateSystem(){
             saveData();
         default:
             break;
-    }    
+    }
+    display->updateData(ciclos,io->getTemperature(),temperaturas.getMean());
+}
+
+event_t Logic::getNextEvent(){
+    event_t ev;
+    temp = io->getTemperature()
+    if(temp >= TEMPERATURA_MAX)
+        ev = TEMP_MAX;
+    else if (temp <= TEMPERATURA_MIN)
+        ev = TEMP_MIN;
+    else{
+        if(io->isCircuitClosed())
+            ev = C_CLOSES;
+        else    
+            ev = C_OPENS;
+        
+        if(io->resetButtonPressed())
+            ev = RESET;
+        if(io->saveButtonPressed())
+            ev = SAVE;
+    }
+    return ev;
 }

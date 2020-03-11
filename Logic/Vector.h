@@ -10,6 +10,7 @@ public:
     void clear();
     int size();
     char getElement(int i);
+    char getMean();
 
 protected:
     char array[ARRAY_SIZE];
