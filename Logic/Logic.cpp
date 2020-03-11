@@ -1,21 +1,16 @@
 #include "./Logic.h"
 
 void Logic::updateData(int temp, bool isTurnedOn){
-    if(isTurnedOn == true && waitUntilnextCicle == false){
+    if(isTurnedOn == true && waitUntilIsColdAgain == false){
         if(danger != true)
             ciclos++;
-        waitUntilnextCicle = true;
-        if(temperaturas.size() < 50)
-            temperaturas.push_back(temp);
-        else {
-            temperaturas.erase(temperaturas.begin());
-            temperaturas.push_back(temp);
-        }
+        waitUntilIsColdAgain = true;
+        temperaturas.push_back(temp);
         /*if (temp >= TEMPERATURA_MIN)
             danger = true;*/
     }
-    else if (isTurnedOn == false && waitUntilnextCicle == true){
-        waitUntilnextCicle = false;
+    else if (isTurnedOn == false && waitUntilIsColdAgain == true){
+        waitUntilIsColdAgain = false;
         if (temp >= TEMPERATURA_MAX)
             danger = true;
     }
@@ -30,13 +25,13 @@ bool Logic::toWarm(bool isTurnedOn){
 }
 
 int Logic::getTempAct(){
-    return temperaturas[temperaturas.size()-1];
+    return temperaturas.getElement(temperaturas.size()-1);
 }
 
 int Logic::getTempProm(){
     int answer = 0;
     for(int i = 0; i < temperaturas.size(); i++){
-        answer += temperaturas[i];
+        answer += temperaturas.getElement(i);
     }
     answer = answer/temperaturas.size();
     return answer;
@@ -58,10 +53,10 @@ data_t Logic::getData2Save(){
     answer.isCorrupted = danger;
     int num = 0;
     for(int i = 0; i < temperaturas.size(); i++){
-        num += temperaturas[i];
+        num += temperaturas.getElement(i);
     }
     num = num/temperaturas.size();
-    answer.TempProm = num;
+    answer.tempProm = num;
     return answer;
 }
 
@@ -69,6 +64,6 @@ void Logic::resetAllData(){
     temperaturas.clear();
     ciclos = 0;
     danger = false;
-    waitUntilNextCicle = false;
+    waitUntilIsColdAgain = false;
     return;
 }

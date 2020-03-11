@@ -2,8 +2,8 @@
 #define LOGIC_H
 #define TEMPERATURA_MAX 55
 #define TEMPERATURA_MIN 40
-#include <vector.h>
-#include "../Display/Display.h"
+#include "./Vector.h"
+//#include "../Display/Display.h"
 // Boton de cambio de modo, boton de reset, boton de guardar, rele, display
 
 typedef struct{
@@ -25,10 +25,10 @@ public:
     void resetAllData();
     
 private:
-    vector <int> temperaturas;
+    Vector temperaturas;
     unsigned int ciclos;
     bool danger = false;
-    bool waitUntilNextCicle = false;
+    bool waitUntilIsColdAgain = false;
 };
 
 #endif
