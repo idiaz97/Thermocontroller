@@ -1,13 +1,13 @@
 #include "./Logic.h"
 
-void Logic::updateData(int temp, bool isTurnedOn){
+/*void Logic::updateData(int temp, bool isTurnedOn){
     if(isTurnedOn == true && waitUntilIsColdAgain == false){
         if(danger != true)
             ciclos++;
         waitUntilIsColdAgain = true;
         temperaturas.push_back(temp);
-        /*if (temp >= TEMPERATURA_MIN)
-            danger = true;*/
+        //if (temp >= TEMPERATURA_MIN)
+        //    danger = true;
     }
     else if (isTurnedOn == false && waitUntilIsColdAgain == true){
         waitUntilIsColdAgain = false;
@@ -24,17 +24,17 @@ bool Logic::toWarm(bool isTurnedOn){
     return warm;
 }
 
-int Logic::getTempAct(){
+char Logic::getTempAct(){
     return temperaturas.getElement(temperaturas.size()-1);
 }
 
-int Logic::getTempProm(){
+char Logic::getTempProm(){
     int answer = 0;
     for(int i = 0; i < temperaturas.size(); i++){
         answer += temperaturas.getElement(i);
     }
-    answer = answer/temperaturas.size();
-    return answer;
+    answer = (answer/temperaturas.size());
+    return ((char)answer);
 }
 
 void Logic::resetDangerFlag(){
@@ -46,7 +46,7 @@ void Logic::setDangerFlag(){
     danger = true;
     return;
 }
-
+*/
 data_t Logic::getData2Save(){
     data_t answer;
     answer.ciclos = ciclos;
@@ -56,7 +56,7 @@ data_t Logic::getData2Save(){
         num += temperaturas.getElement(i);
     }
     num = num/temperaturas.size();
-    answer.tempProm = num;
+    answer.tempProm = (char)num;
     return answer;
 }
 
@@ -66,4 +66,52 @@ void Logic::resetAllData(){
     danger = false;
     waitUntilIsColdAgain = false;
     return;
+}
+
+
+Logic::Logic(IO * temp, Dsiplay * disp){
+    ciclos = 0;
+    currentState = COOLING;
+    io = temp;
+    display = disp;
+}
+
+void Logic::updateSystem(){
+    event_t ev = getNextEvent();
+    switch(ev){
+        case C_OPENS:
+            if(currentState == COOLING){
+                currentState = WARMING;
+                io->toWarm(true);
+            }
+            break;
+        case C_CLOSES:
+            if(currentState == WARMING){
+                currentState = COOLING;
+                io->toWarm(false);
+                ciclos++;
+                temperaturas.push_back(io->getTemperature());
+                display->updateData(ciclos,io->getTemperature(),temperaturas.getMean());
+            }
+            break;
+        case TEMP_MAX:
+            currentState = DANGER;
+            io->toWarm(false);
+            //AVISAR EN EL DISPLAY
+            break;
+        case TEMP_MIN:
+            if(currentState != START)
+                currentState = DANGER;
+            else
+                currentState = WARMING;
+            break;
+        case RESET:
+            currentState = START;
+            resetAllData();
+            break;
+        case SAVE:
+            saveData();
+        default:
+            break;
+    }    
 }

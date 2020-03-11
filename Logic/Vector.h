@@ -9,9 +9,10 @@ public:
     void push_back(int temp);
     void clear();
     int size();
-    int getElement(int i);
+    char getElement(int i);
+
 protected:
-    int array[ARRAY_SIZE];
+    char array[ARRAY_SIZE];
     int iterator;
     void moveOnePlaceLeft();
 };

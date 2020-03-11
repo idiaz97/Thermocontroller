@@ -41,5 +41,21 @@ int Vector::size(){
 }
 
 int Vector::getElement(int i){
-    return array[i-1];
+    int answer = 0
+    if(i<iterator)
+        answer = array[i];
+    return answer;
+}
+
+
+char Vector::getMean(){
+    int temporary = 0;
+    for (int i = 0 ; i < iterator; i++){
+        temporary += array[i];
+    }
+    if(iteraror != 0)
+        temporary = temporary/iterator;
+    else
+        temporary = 0;
+    return (char) temporary;
 }

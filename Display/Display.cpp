@@ -12,7 +12,7 @@
     return;
 }
 
-void Display::updateData(unsigned int cicl, int tempAct,int tempProm){
+void Display::updateData(unsigned int cicl, char tempAct,char tempProm){
     ciclos = cicl;
     if (tempAct != 0)
         temperaturaActual = tempAct;
@@ -43,9 +43,9 @@ bool Display::printData(){
     lcd->clear();
     String line1;
     if(displayMode == ACTUAL)
-        line1 = "TempAct: " + String(temperaturaActual) + String(" C");
+        line1 = "TempAct: " + String((int)temperaturaActual) + String(" C");
     else if (displayMode = PROMEDIO)
-        line1 = "TempProm: " + String(temperaturaProm)+ String(" C");
+        line1 = "TempProm: " + String((int)temperaturaProm)+ String(" C");
     else
         isOk = false;
 

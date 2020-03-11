@@ -8,27 +8,36 @@
 
 typedef struct{
     unsigned int ciclos;
-    int tempProm;
+    char tempProm;
     bool isCorrupted;
 }data_t;
+
+typedef enum{WARMING, COOLING, DANGER, BROKEN}state_t;
+typedef enum{C_OPENS, C_CLOSES, TEMP_MAX, TEMP_MIN, RESET}event_t
 
 
 class Logic{
 public:
-    void updateData(int temp, bool isTurnedOn);
-    bool toWarm(bool isTurnedOn); //Devuelve true si el sistema tiene que calentar, y false si tiene que enfriar.
-    int getTempAct();
-    int getTempProm();
-    void resetDangerFlag();
-    void setDangerFlag();
+    Logic(IO * temp, Dsiplay * disp);
+    //void getNextState();
+    void updateSystem();
+    //void updateData(int temp, bool isTurnedOn);
+    //bool toWarm(bool isTurnedOn); //Devuelve true si el sistema tiene que calentar, y false si tiene que enfriar.
+    //char getTempAct();
+    //char getTempProm();
+    //void resetDangerFlag();
+    //void setDangerFlag();
     data_t getData2Save();
     void resetAllData();
     
 private:
     Vector temperaturas;
     unsigned int ciclos;
-    bool danger = false;
-    bool waitUntilIsColdAgain = false;
+    //bool danger = false;
+    //bool waitUntilIsColdAgain = false;
+    state_t currentState;
+    IO * io;
+    Display * display;
 };
 
 #endif
