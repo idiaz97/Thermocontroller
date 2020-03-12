@@ -73,6 +73,7 @@ Logic::Logic(IO * temp, Dsiplay * disp){
     currentState = START;
     io = temp;
     display = disp;
+    prevEvent = NO_EVENT;
 }
 
 void Logic::updateSystem(){
@@ -98,10 +99,7 @@ void Logic::updateSystem(){
             //AVISAR EN EL DISPLAY
             break;
         case TEMP_MIN:
-            if(currentState != START)
-                currentState = DANGER;
-            else
-                currentState = WARMING;
+            currentState = WARMING;
             break;
         case RESET:
             currentState = START;
@@ -109,6 +107,10 @@ void Logic::updateSystem(){
             break;
         case SAVE:
             saveData();
+            break;
+        case CHANGE_DISP:
+            display->changeDisplayMode();
+            break;
         default:
             break;
     }
@@ -116,22 +118,23 @@ void Logic::updateSystem(){
 }
 
 event_t Logic::getNextEvent(){
-    event_t ev;
+    event_t ev = NO_EVENT;
     temp = io->getTemperature()
-    if(temp >= TEMPERATURA_MAX)
+    if(temp >= TEMPERATURA_MAX && prevEvent != TEMP_MAX)
         ev = TEMP_MAX;
-    else if (temp <= TEMPERATURA_MIN)
+    else if (temp <= TEMPERATURA_MIN && prevEvent != TEMP_MIN)
         ev = TEMP_MIN;
     else{
-        if(io->isCircuitClosed())
+        if(io->isCircuitClosed() && prevEvent != C_CLOSES)
             ev = C_CLOSES;
-        else    
+        else if(!io->isCircuitClosed() && prevEvent != C_OPENS)
             ev = C_OPENS;
         
-        if(io->resetButtonPressed())
+        if(io->resetButtonPressed() && prevEvent != RESET)
             ev = RESET;
-        if(io->saveButtonPressed())
+        if(io->saveButtonPressed() && prevEvent != SAVE)
             ev = SAVE;
     }
+    prevEvent = ev;
     return ev;
 }

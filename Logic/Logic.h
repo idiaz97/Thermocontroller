@@ -13,7 +13,7 @@ typedef struct{
 }data_t;
 
 typedef enum{WARMING, COOLING, DANGER, BROKEN}state_t;
-typedef enum{C_OPENS, C_CLOSES, TEMP_MAX, TEMP_MIN, RESET}event_t
+typedef enum{C_OPENS, C_CLOSES, TEMP_MAX, TEMP_MIN, RESET, CHANGE_DISP, SAVE, NO_EVENT}event_t
 
 
 class Logic{
@@ -31,10 +31,12 @@ public:
     void resetAllData();
     
 private:
+    event_t getNextEvent();
     Vector temperaturas;
     unsigned int ciclos;
     //bool danger = false;
     //bool waitUntilIsColdAgain = false;
+    event_t prevEvent;
     state_t currentState;
     IO * io;
     Display * display;
