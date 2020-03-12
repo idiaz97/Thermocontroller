@@ -1,3 +1,9 @@
+//////////////////////////////////////////////////////////////////////////////////////////
+//              Libreria Logica para el controlador de la termocupla              //
+//                                  Ian Diaz                                            //
+//                                 Enero 2020                                           //
+//////////////////////////////////////////////////////////////////////////////////////////
+
 #ifndef LOGIC_H
 #define LOGIC_H
 #define TEMPERATURA_MAX 55
@@ -18,7 +24,7 @@ typedef enum{C_OPENS, C_CLOSES, TEMP_MAX, TEMP_MIN, RESET, CHANGE_DISP, SAVE, NO
 
 class Logic{
 public:
-    Logic(IO * temp, Dsiplay * disp);
+    Logic(IO * temp, Dsiplay * disp); //contrucotr
     //void getNextState();
     void updateSystem();
     //void updateData(int temp, bool isTurnedOn);
@@ -27,11 +33,12 @@ public:
     //char getTempProm();
     //void resetDangerFlag();
     //void setDangerFlag();
-    data_t getData2Save();
+    //data_t getData2Save();
     void resetAllData();
     
 private:
     event_t getNextEvent();
+    void saveData();
     Vector temperaturas;
     unsigned int ciclos;
     //bool danger = false;
