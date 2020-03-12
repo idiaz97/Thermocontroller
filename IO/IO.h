@@ -6,13 +6,15 @@
 
 class IO{
 public:
-    IO(int DQpin, int warmPin);
+    IO(int DQpin, int warmPin, int ACpin);
     char getTemperature();
     bool isCircuitClosed();
     void toWarm(bool temp);
 private:
     OneWire * oneWireObj;
     DallasTemperature * sensorTemp;
+    int warmPin;
+    int ACpin
 };
 
 
