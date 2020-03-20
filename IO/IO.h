@@ -19,14 +19,14 @@
 class IO{
 public:
     IO(int DQpin, int warmPin, int ACpin); //Constructor, que se le debe pasar el numero de los pines especificados
-    char getTemperature();          //Devuelve la temperatura que mide el sensor en este instante de tiempo.
+    float getTemperature();          //Devuelve la temperatura que mide el sensor en este instante de tiempo.
     bool isCircuitClosed();         //Devuelve true si el circuito esta cerrado, false en caso contrario
     void toWarm(bool temp);         //Enciende el calentadorsi recibe true, lo apaga si recibe false
 private:
     OneWire * oneWireObj;
     DallasTemperature * sensorTemp;
     int warmPin;
-    int ACpin
+    int ACpin;
 };
 
 
